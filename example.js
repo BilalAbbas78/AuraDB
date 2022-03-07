@@ -1,33 +1,23 @@
 (async() => {
  const neo4j = require('neo4j-driver')
  
-const express = require('express')
-const app = express();
-
- const uri = 'neo4j+s://eab6264f.databases.neo4j.io'; 
- const user = 'neo4j';
- const password = 'TGYkUXMD39MaYXVYXOiL3zWrmhyblCptRLdHSgxis-8';
+ const uri = 'neo4j+s://<Bolt url for Neo4j Aura database>';
+ const user = '<Username for Neo4j Aura database>';
+ const password = '<Password for Neo4j Aura database>';
  
  const driver = neo4j.driver(uri, neo4j.auth.basic(user, password))
  const session = driver.session()
 
  const person1Name = 'Alice'
  const person2Name = 'David'
-app.get('/', function(req, res){
-	res.sendFile(__dirname +'/index.html');
-});
-
-app.listen(3000);
 
  try {
    // To learn more about the Cypher syntax, see https://neo4j.com/docs/cypher-manual/current/
    // The Reference Card is also a good resource for keywords https://neo4j.com/docs/cypher-refcard/current/
-   //const writeQuery = `MERGE (p1:Person { name: $person1Name })
-   //                    MERGE (p2:Person { name: $person2Name })
-   //                    MERGE (p1)-[:KNOWS]->(p2)
-   //                    RETURN p1, p2`
-
-   const writeQuery = `MATCH (n) RETURN n`
+   const writeQuery = `MERGE (p1:Person { name: $person1Name })
+                       MERGE (p2:Person { name: $person2Name })
+                       MERGE (p1)-[:KNOWS]->(p2)
+                       RETURN p1, p2`
 
    // Write transactions allow the driver to handle retries and transient errors
    const writeResult = await session.writeTransaction(tx =>
